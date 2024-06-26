@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online IPTV</title>
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #008080;
+            margin-bottom: 20px;
+        }
+
+        #channels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .channel {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .channel:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .channel-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            .channel {
+                padding: 8px;
+                max-width: 100%;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Online IPTV</h1>
+        <div id="channels">
+            <!-- Список каналов будет добавлен здесь через JS -->
+        </div>
+    </div>
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const channels = [
+                { name: "Fox", url: "https://stream01.vnet.am/Fox/mono.m3u8" },
+                { name: "Friday", url: "http://s18209.cdn.ngenix.net/hls/CH_R01_FRIDAY/playlist.m3u8" },
+                { name: "Teleradiocom", url: "https://live.teleradiocom.tj/4/3m.m3u8" },
+                { name: "Кухня ТВ", url: "http://stream01.vnet.am/KukhnyaTv/mono.m3u8" },
+                { name: "Volgograd", url: "http://hls.volgograd1vtv.cdnvideo.ru/volgograd1vtv/volgograd1vtv.sdp/playlist.m3u8" },
+                { name: "Mult", url: "http://stream01.vnet.am/Mult/mono.m3u8" },
+                { name: "Multimania", url: "http://sirius.greenhosting.ru/MultimaniaRu/video.m3u8" },
+                { name: "MusicBox Gold", url: "https://strm.yandex.ru/kal/musicboxgold/musicboxgold0.m3u8" },
+                { name: "Muz TV", url: "http://stream01.vnet.am/MuzTv/mono.m3u8" },
+                { name: "NatGeo Wild", url: "http://stream02.vnet.am/NatGeoWild/mono.m3u8" },
+                { name: "Ucom", url: "http://ott-cdn.ucom.am/s98/index.m3u8" },
+                { name: "UTV", url: "http://92.50.128.180/utv/1358/index.m3u8" },
+                { name: "REN TV", url: "http://s18209.cdn.ngenix.net/hls/CH_R02_RENTV/playlist.m3u8" },
+                { name: "Smotrim", url: "https://player.smotrim.ru/iframe/stream/live_id/63254" },
+                { name: "RuTV", url: "https://edge02.odtv.az/o7/rutv/playlist.m3u8" },
+                { name: "Soyuz", url: "https://hls-tvsoyuz.cdnvideo.ru/tvsoyuz/soyuz/playlist.m3u8" },
+                { name: "Disney Channel", url: "http://stream02.vnet.am/DisneyChannel/mono.m3u8" },
+                { name: "STS Love", url: "http://streaming.tv-teleport.ru/STS_Love/index.m3u8" },
+                { name: "TNV Planet", url: "https://planeta.mediacdn.ru/cdn/tnvplanet/playlist.m3u8" },
+                { name: "Teleradiocom 3", url: "https://live.teleradiocom.tj/3/3m.m3u8" },
+                { name: "Bonus TV", url: "https://cdn-01.bonus-tv.ru/tvm_edge/playlist.m3u8" },
+                { name: "Teleradiocom 2", url: "https://live.teleradiocom.tj/2/3m.m3u8" },
+                { name: "Teleradiocom 6", url: "https://live.teleradiocom.tj/6/3m.m3u8" },
+                { name: "Channel U", url: "http://s18209.cdn.ngenix.net/hls/CH_R03_U/playlist.m3u8" },
+                { name: "Nickelodeon", url: "http://streaming.tv-teleport.ru/Nickelodeon/index.m3u8" },
+                { name: "NTV Serial", url: "https://cdn.ntv.ru/th_serial/playlist.m3u8" },
+                { name: "STS", url: "https://rt-sib-krsk-htlive.cdn.ngenix.net/hls/CH_R11_OTT_SIB_KRSK_STS/variant.m3u8" },
+                { name: "Pro100 TV", url: "https://sirius.greenhosting.ru/Pro100tvRu/video.m3u8" },
+                { name: "UDP 239.0.100.141", url: "http://82.209.197.187:8080/udp/239.0.100.141:1234" },
+                { name: "UDP 239.0.100.82", url: "http://82.209.197.187:8080/udp/239.0.100.82:1234" },
+                { name: "Zvezda", url: "http://s18209.cdn.ngenix.net/hls/CH_R03_ZVEZDA/playlist.m3u8" }
+            ];
+
+            const channelsContainer = document.getElementById('channels');
+
+            channels.forEach(channel => {
+                const channelElement = document.createElement('div');
+                channelElement.classList.add('channel');
+                
+                const channelName = document.createElement('div');
+                channelName.classList.add('channel-name');
+                channelName.textContent = channel.name;
+                channelElement.appendChild(channelName);
+                
+                channelElement.addEventListener('click', () => {
+                    openPlayerWindow(channel.url);
+                });
+                channelsContainer.appendChild(channelElement);
+            });
+            
+            function openPlayerWindow(url) {
+                const playerWindow = window.open('', '_blank', 'width=800,height=450');
+                playerWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Online IPTV Player</title>
+                        <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+                    </head>
+                    <body>
+                        <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" width="800" height="450">
+                            <source src="${url}" type="application/x-mpegURL">
+                        </video>
+                        <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+                        <script>
+                            const player = videojs('videoPlayer');
+                            player.play();
+                        </script>
+                    </body>
+                    </html>
+                `);
+            }
+        });
+    </script>
+</body>
+</html>
