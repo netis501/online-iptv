@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Player</title>
-    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
+    <title>IPTV Player with VLC</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,30 +19,26 @@
             width: 80%;
             max-width: 800px;
         }
-        video {
-            width: 100%;
-            height: auto;
-        }
         select {
             width: 100%;
             padding: 10px;
             margin-top: 20px;
             font-size: 16px;
         }
+        embed {
+            width: 100%;
+            height: 480px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" data-setup='{}'>
-            <source src="" type="application/x-mpegURL">
-        </video>
+        <embed type="application/x-vlc-plugin" id="vlc" target="" />
         <select id="channelSelector" onchange="changeChannel()">
             <option value="">Select a channel</option>
             <!-- Channels will be populated here -->
         </select>
     </div>
-    <script src="https://vjs.zencdn.net/7.11.4/video.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.js"></script>
     <script>
         const channels = [
             { name: "Fox", url: "https://stream01.vnet.am/Fox/mono.m3u8" },
@@ -79,7 +74,6 @@
             { name: "Zvezda", url: "http://s18209.cdn.ngenix.net/hls/CH_R03_ZVEZDA/playlist.m3u8" },
         ];
 
-        const player = videojs('videoPlayer');
         const selector = document.getElementById('channelSelector');
 
         channels.forEach(channel => {
@@ -91,9 +85,9 @@
 
         function changeChannel() {
             const selectedUrl = selector.value;
+            const vlc = document.getElementById('vlc');
             if (selectedUrl) {
-                player.src({ src: selectedUrl, type: 'application/x-mpegURL' });
-                player.play();
+                vlc.target = selectedUrl;
             }
         }
     </script>
